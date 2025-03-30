@@ -16,7 +16,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <head />
+      <head>
+        <meta name="naver-site-verification" content="6f3a93abd49e8da4b70f3107ebdf3890e0ab142b" />
+      </head>
       <body className="bg-gray-100 flex flex-col h-full overflow-hidden">
         <header className='flex fixed top-0 px-3 left-0 w-full h-16 bg-gray-800 text-white z-10'>
           <h1 className="flex items-center text-2xl font-bold font-bnviit">🐱 Just Meow It</h1>
