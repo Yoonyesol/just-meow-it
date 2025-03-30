@@ -6,12 +6,12 @@ import { Suspense } from 'react';
 
 const CatModel = () => {
   const { scene } = useGLTF('/cat_model/scene.gltf'); // public 폴더의 glTF 모델 로드
-  return <primitive object={scene} scale={0.06} position={[0, -1, 0]} />;
+  return <primitive object={scene} scale={0.09} position={[0, -2, 0]} />;
 };
 
 const CatScene = () => {
   return (
-    <Canvas camera={{ position: [0, 2, 5] }} style={{ height: '80vh' }}>
+    <Canvas camera={{ position: [0, 1, 6] }} style={{ height: '50vh' }}>
       <ambientLight intensity={0.5} />
       <directionalLight position={[2, 2, 2]} />
       <Suspense fallback={null}>
