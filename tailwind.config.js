@@ -15,5 +15,8 @@ module.exports = {
       },
     },
   },
+  fontFamily: {
+    bnviit: ['BnviitLasikOTF', 'sans-serif'], // RIDIBatang 폰트 추가
+  },
   plugins: [],
 };
