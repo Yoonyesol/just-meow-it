@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://just-meow-it.timeqlife.com
+Host: https://just-meow-it.timeqlife.com/
 
 # Sitemaps
 Sitemap: https://just-meow-it.timeqlife.com/sitemap.xml
