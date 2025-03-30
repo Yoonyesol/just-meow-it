@@ -1,10 +1,12 @@
-import CatModel from "@/components/CatModel";
+import CatModel from '@/components/CatModel';
+import MeowButton from '@/components/MeowButton';
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center justify-center h-screen gap-6">
-      <h1 className="text-3xl font-bold">🐱 고양이의 가르침</h1>
+    <main className="my-7 flex h-screen flex-col items-center justify-center">
+      <h1 className="text-3xl font-bold">🐱 고양이의 조언</h1>
       <CatModel />
+      <MeowButton />
     </main>
   );
 }
