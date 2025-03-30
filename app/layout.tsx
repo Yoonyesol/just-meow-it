@@ -2,8 +2,15 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Just Meow It',
-  description: '고민이 있을 때는 고양이의 조언을 들어보세요.',
+  title: 'Just Meow It | 고양이의 조언으로 고민 해결하기',
+  description: '고양이의 지혜를 통해 고민을 해결해 보세요.',
+  keywords: '고양이, 조언, 고민, 팁, 동물, 심리 상담, 동물 조언, 정신 건강',
+  robots: 'index, follow',
+  openGraph: {
+    title: 'Just Meow It | 고양이의 조언으로 고민 해결하기',
+    description: '고양이의 지혜를 통해 고민을 해결해 보세요.',
+    type: 'website',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
