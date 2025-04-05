@@ -30,7 +30,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <h1 className="flex items-center text-2xl font-bold font-bnviit">🐱 Just Meow It</h1>
         </header>
         <div className="container mx-auto pt-16 flex-1">
-          <AdSense adSlot={"8185832302"} />
           {children}
           <AdSense adSlot={"8185832302"} />
         </div>
