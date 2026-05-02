@@ -5,7 +5,7 @@ export default defineConfig({
   brand: {
     displayName: '별 헤는 냥', // 앱인토스 콘솔에 등록한 앱의 한글 이름
     primaryColor: '#5D6BBF', // 화면에 노출될 앱의 기본 색상 (퍼플/인디고)
-    icon: '/favicon3.ico', // 화면에 노출될 앱의 아이콘 이미지 주소
+    icon: 'https://static.toss.im/appsintoss/40123/1ba2f6bc-8520-4d29-84ab-ccc7cdc49a01.png', // 화면에 노출될 앱의 아이콘 이미지 주소
   },
   web: {
     host: 'localhost',
