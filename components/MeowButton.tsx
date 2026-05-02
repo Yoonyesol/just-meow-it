@@ -25,61 +25,67 @@ export default function MeowButton() {
 
     const handleMeow = () => {
         setIsLoading(true);
-        setShowBubble(true); // 로딩 중에도 말풍선을 띄워 스켈레톤을 보여줌
-        
+        setShowBubble(true);
+
         setTimeout(() => {
             const randomAdvice = ADVICES[Math.floor(Math.random() * ADVICES.length)];
             setAdvice(randomAdvice);
             setIsLoading(false);
             setHasStarted(true);
-            // showBubble은 계속 true 유지
         }, 1500);
     };
 
     return (
-        <div className="w-full h-full flex flex-col relative">
-            {/* 고양이 + 조언 박스 + 버튼 통합 영역 (상향 조정 레이아웃 고정) */}
-            <div className="flex-1 w-full max-w-md px-6 z-10 flex flex-col justify-center items-center pointer-events-auto mx-auto -mt-10">
-                {/* 고양이 영역 (높이 고정) */}
-                <div className="w-full h-[25vh] min-h-[220px] relative">
-                    <CatScene 
-                        advice={advice} 
-                        showBubble={showBubble} 
-                        showOnlyCat={true} 
-                        isLoading={isLoading} 
-                    />
-                </div>
+        <div className="fixed inset-0 w-full h-screen flex flex-col items-center overflow-hidden">
+            {/* 고양이 영역: 전체 화면 캔버스 */}
+            <div className="absolute inset-0 z-0">
+                <CatScene
+                    advice={advice}
+                    showBubble={showBubble}
+                    showOnlyCat={true}
+                    isLoading={isLoading}
+                />
+            </div>
 
-                {/* 해설 제목 레이아웃 완전 고정 (h-[20px] 확보) */}
-                <div className="w-full text-left px-1 mb-2 h-[20px] flex items-end">
-                    <div className={`transition-opacity duration-300 ${(hasStarted && !isLoading) ? 'opacity-100' : 'opacity-0'}`}>
-                        <Paragraph typography="t7" fontWeight="bold" className="text-[#8B95A1]">해설</Paragraph>
-                    </div>
-                </div>
-                
-                {/* 조언 해설 박스 (높이 및 위치 고정) */}
-                <div className="min-h-[110px] w-full bg-[#161B2C]/90 backdrop-blur-xl rounded-[24px] p-6 flex flex-col items-center justify-center transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-white/10">
+            {/* UI 레이어: 텍스트 중앙 정렬 적용 */}
+            <div className="flex-1 w-full max-w-md px-6 z-10 flex flex-col justify-center items-center pointer-events-none mx-auto">
+                {/* 상단 고양이 위치 가이드 */}
+                <div className="w-full h-[30vh] min-h-[250px]"></div>
+
+                <Spacing size={12} />
+
+                {/* 조언 해설 박스 (무조건 중앙 정렬 강제) */}
+                <div className="min-h-[110px] w-full bg-[#161B2C]/90 backdrop-blur-xl rounded-[24px] p-6 flex flex-col items-center justify-center transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-white/10 pointer-events-auto">
                     {isLoading ? (
                         <AdviceSkeleton />
                     ) : !hasStarted ? (
-                        <Paragraph typography="t6" fontWeight="medium" className='text-[#CBD5E1] whitespace-pre-line leading-relaxed text-center'>
+                        <Paragraph typography="t6" fontWeight="medium" className='text-[#CBD5E1] whitespace-pre-line leading-relaxed text-center w-full' style={{ textAlign: 'center' }}>
                             머릿속을 맴도는 고민이 있냥?{'\n'}마음속으로 질문을 떠올리고 버튼을 누르라옹!
                         </Paragraph>
                     ) : (
-                        <Paragraph typography="t7" fontWeight="medium" className='text-[#E5E8EB] whitespace-pre-line leading-relaxed break-keep text-center'>
+                        <Paragraph typography="t7" fontWeight="medium" className='text-[#E5E8EB] whitespace-pre-line leading-relaxed break-keep text-center w-full' style={{ textAlign: 'center' }}>
                             {advice.advice}
                         </Paragraph>
                     )}
                 </div>
 
-                <Spacing size={16} />
+                <Spacing size={24} />
 
-                {/* 메인 버튼 (위치 고정) */}
-                <TossButton 
-                    title={isLoading ? "냥이가 생각 중..." : (!hasStarted ? "냥이에게 물어보기" : "다시 물어보기")} 
-                    onPress={handleMeow}
-                    disabled={isLoading}
-                />
+                {/* 메인 버튼 */}
+                <div className="w-full pointer-events-auto">
+                    <TossButton
+                        title={isLoading ? "냥이가 생각 중..." : (!hasStarted ? "냥이에게 물어보기" : "다시 물어보기")}
+                        onPress={handleMeow}
+                        disabled={isLoading}
+                    />
+                </div>
+            </div>
+
+            {/* 푸터 영역 */}
+            <div className="absolute bottom-10 w-full flex justify-center z-50 pointer-events-none">
+                <span className="text-white/40 text-[10px] text-center leading-none">
+                    Cat model by Adrian.Alexis.Liberato (CC-BY-4.0)
+                </span>
             </div>
         </div>
     );

@@ -21,7 +21,7 @@ const CatModel = ({ advice, showBubble }: CatProps) => {
   return (
     <group ref={group}>
       <Float speed={1.5} rotationIntensity={0.25} floatIntensity={0.3} floatingRange={[-0.03, 0.03]}>
-        <primitive object={scene} scale={0.1} position={[0, -4.2, 0]} />
+        <primitive object={scene} scale={0.06} position={[0, -4.2, 0]} />
       </Float>
     </group>
   );
@@ -168,7 +168,7 @@ const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoadi
     <div className={`absolute inset-0 w-full h-full ${showOnlyCat ? 'z-10' : 'z-0'}`}>
       {/* 2D 말풍선 */}
       {!showOnlyBackground && showBubble && (
-        <div className="absolute top-[5%] left-1/2 transform -translate-x-1/2 z-20 w-max min-w-[140px] max-w-[260px] animate-fadeInOut transition-all duration-300">
+        <div className="absolute top-[11%] left-1/2 transform -translate-x-1/2 z-20 w-max min-w-[140px] max-w-[260px] animate-fadeInOut transition-all duration-300">
           <div className="bg-[#5D6BBF] rounded-[24px] px-5 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.5)] border border-white/30 flex items-center justify-center relative min-h-[52px]">
             {isLoading ? (
               <div className="flex gap-1.5 animate-pulse">
@@ -186,8 +186,8 @@ const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoadi
         </div>
       )}
 
-      <Canvas camera={{ position: [0, 1.5, 5.5] }} style={{ width: '100%', height: '100%' }}>
-        <group position={[0, 1, 0]}>
+      <Canvas camera={{ position: [0, 1.5, 6] }} style={{ width: '100%', height: '100%' }}>
+        <group position={[0, 4.0, 0]}>
           {/* 배경 요소들 */}
           {!showOnlyCat && (
             <>
