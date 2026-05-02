@@ -71,19 +71,36 @@ export default function MeowButton() {
 
                 <Spacing size={12} />
 
-                {/* 조언 해설 박스 (무조건 중앙 정렬 강제) */}
-                <div className="min-h-[110px] w-full bg-[#161B2C]/90 backdrop-blur-xl rounded-[24px] p-6 flex flex-col items-center justify-center transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-white/10 pointer-events-auto">
+                {/* 조언 해설 박스 (프리미엄 반짝이는 글래스모피즘) */}
+                <div 
+                    className="min-h-[110px] w-full bg-white/10 backdrop-blur-[32px] rounded-[28px] p-6 flex flex-col items-center justify-center transition-all duration-500 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-[1.5px] border-white/40 pointer-events-auto relative overflow-hidden group"
+                    style={{
+                        boxShadow: '0 0 15px rgba(255, 255, 255, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.05)',
+                        animation: 'border-shimmer 3s infinite alternate ease-in-out'
+                    }}
+                >
+                    {/* 반짝임 효과용 내부 광원 */}
+                    <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent opacity-50 group-hover:opacity-100 transition-opacity" />
+                    
                     {isLoading ? (
                         <AdviceSkeleton />
                     ) : !hasStarted ? (
-                        <Paragraph typography="t6" fontWeight="medium" className='text-[#F9FAFB] whitespace-pre-line leading-relaxed text-center w-full' style={{ textAlign: 'center' }}>
+                        <Paragraph typography="t6" fontWeight="medium" style={{ color: '#FFFFFF', textAlign: 'center', position: 'relative', zIndex: 1 }} className='whitespace-pre-line leading-relaxed text-center w-full'>
                             머릿속을 맴도는 고민이 있냥?{'\n'}마음속으로 질문을 떠올리고 버튼을 누르라옹!
                         </Paragraph>
                     ) : (
-                        <Paragraph typography="t7" fontWeight="medium" className='text-[#F9FAFB] whitespace-pre-line leading-relaxed break-keep text-center w-full' style={{ textAlign: 'center' }}>
+                        <Paragraph typography="t7" fontWeight="medium" style={{ color: '#FFFFFF', textAlign: 'center', position: 'relative', zIndex: 1 }} className='whitespace-pre-line leading-relaxed break-keep text-center w-full'>
                             {advice.advice}
                         </Paragraph>
                     )}
+
+                    <style jsx>{`
+                        @keyframes border-shimmer {
+                            0% { border-color: rgba(255, 255, 255, 0.3); box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+                            50% { border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 0 20px rgba(255, 255, 255, 0.2); }
+                            100% { border-color: rgba(255, 255, 255, 0.3); box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); }
+                        }
+                    `}</style>
                 </div>
 
                 <Spacing size={24} />

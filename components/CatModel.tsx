@@ -14,20 +14,20 @@ interface CatProps {
   isLoading?: boolean;
 }
 
-// 모드별 설정 분리
+// 모드별 설정 분리 (전체적으로 아래로 1.5 유닛 이동)
 const CONFIG = {
   portrait: {
     catX: 0,
-    catY: 4.0,
-    cameraPos: [0, 1.5, 7] as [number, number, number],
-    target: [0, 1.5, 0] as [number, number, number],
+    catY: 4.5, // 고양이 위치는 높게
+    cameraPos: [0, 3, 10] as [number, number, number], // 카메라는 낮게 (아래에서 올려다봄)
+    target: [0, 3, 0] as [number, number, number],    // 시선도 낮게
     polarRange: [Math.PI / 2.5, Math.PI / 2.5] as [number, number],
   },
   landscape: {
     catX: -5.5,
-    catY: 5.2,
-    cameraPos: [-5.5, 5.2, 7] as [number, number, number],
-    target: [-5.5, 5.2, 0] as [number, number, number],
+    catY: 4.0, // 가로 모드도 상향 조정
+    cameraPos: [-5.5, 5.0, 10] as [number, number, number],
+    target: [-5.5, 5.0, 0] as [number, number, number],
     polarRange: [Math.PI / 2.1, Math.PI / 1.9] as [number, number],
   }
 };
@@ -38,30 +38,30 @@ const CatModel = ({ advice, showBubble, isLoading }: CatProps) => {
 
   return (
     <group ref={group}>
-      {/* 3D 말풍선 복구 및 색상 강화 */}
+      {/* 3D 말풍선: 고양이 머리에 더 가깝게 조정 */}
       {showBubble && (
-        <Html position={[0, 1.2, 0]} center distanceFactor={10} className="pointer-events-none">
+        <Html position={[0, 0.9, 0]} center distanceFactor={10} className="pointer-events-none">
           <div className="w-max min-w-[140px] max-w-[220px] animate-fadeInOut transition-all duration-300">
-            <div className="bg-[#4F5BB0] rounded-[20px] px-4 py-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.6)] border border-white/40 flex items-center justify-center relative min-h-[44px]">
+            <div className="bg-[#8FA1FF] rounded-[20px] px-4 py-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.4)] border border-white/50 flex items-center justify-center relative min-h-[44px]">
               {isLoading ? (
                 <div className="flex gap-1.5 animate-pulse">
-                  <div className="w-2 h-2 bg-white/60 rounded-full"></div>
-                  <div className="w-2 h-2 bg-white/60 rounded-full"></div>
-                  <div className="w-2 h-2 bg-white/60 rounded-full"></div>
+                  <div className="w-2 h-2 bg-white/80 rounded-full"></div>
+                  <div className="w-2 h-2 bg-white/80 rounded-full"></div>
+                  <div className="w-2 h-2 bg-white/80 rounded-full"></div>
                 </div>
               ) : advice && (
-                <Paragraph typography="t7" fontWeight="bold" className="text-white text-center leading-tight break-keep" style={{ color: '#FFFFFF' }}>
+                <Paragraph typography="t7" fontWeight="bold" style={{ color: '#FFFFFF', textAlign: 'center' }} className="leading-tight break-keep">
                   {advice.title}
                 </Paragraph>
               )}
-              <div className="absolute -bottom-[5px] left-1/2 transform -translate-x-1/2 w-2.5 h-2.5 bg-[#4F5BB0] rotate-45 rounded-[1px] border-b border-r border-white/40"></div>
+              <div className="absolute -bottom-[5px] left-1/2 transform -translate-x-1/2 w-2.5 h-2.5 bg-[#8FA1FF] rotate-45 rounded-[1px] border-b border-r border-white/50"></div>
             </div>
           </div>
         </Html>
       )}
 
       <Float speed={1.5} rotationIntensity={0.25} floatIntensity={0.3} floatingRange={[-0.03, 0.03]}>
-        <primitive object={scene} scale={0.06} position={[0, -4.2, 0]} />
+        <primitive object={scene} scale={0.045} position={[0, -1.5, 0]} />
       </Float>
     </group>
   );
@@ -74,7 +74,7 @@ const LoadingPlaceholder = () => {
   });
   return (
     <mesh ref={ref} position={[0, -0.5, 0]}>
-      <sphereGeometry args={[0.5, 32, 32]} />
+      <sphereGeometry args={[0.3, 32, 32]} />
       <meshStandardMaterial color="#818CF8" emissive="#818CF8" emissiveIntensity={2} transparent opacity={0.3} wireframe />
     </mesh>
   );
@@ -99,12 +99,12 @@ const OrbitingMoons = () => {
   });
 
   return (
-    <group position={[0, -0.8, 0]}>
-      <mesh ref={planet1}><sphereGeometry args={[0.25, 16, 16]} /><meshStandardMaterial color="#818CF8" emissive="#818CF8" emissiveIntensity={0.8} wireframe /></mesh>
-      <mesh ref={planet2}><icosahedronGeometry args={[0.22, 0]} /><meshStandardMaterial color="#FBCFE8" emissive="#FBCFE8" emissiveIntensity={0.6} wireframe /></mesh>
-      <mesh ref={planet3}><octahedronGeometry args={[0.15, 0]} /><meshStandardMaterial color="#34D399" emissive="#34D399" emissiveIntensity={1} wireframe /></mesh>
-      <mesh ref={planet4}><dodecahedronGeometry args={[0.18, 0]} /><meshStandardMaterial color="#94A3B8" emissive="#64748B" emissiveIntensity={0.3} wireframe /></mesh>
-      <mesh ref={planet5}><tetrahedronGeometry args={[0.12, 0]} /><meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.5} wireframe /></mesh>
+    <group position={[0, -1.5, 0]}>
+      <mesh ref={planet1}><sphereGeometry args={[0.15, 16, 16]} /><meshStandardMaterial color="#818CF8" emissive="#818CF8" emissiveIntensity={0.8} wireframe /></mesh>
+      <mesh ref={planet2}><icosahedronGeometry args={[0.15, 0]} /><meshStandardMaterial color="#FBCFE8" emissive="#FBCFE8" emissiveIntensity={0.6} wireframe /></mesh>
+      <mesh ref={planet3}><octahedronGeometry args={[0.1, 0]} /><meshStandardMaterial color="#34D399" emissive="#34D399" emissiveIntensity={1} wireframe /></mesh>
+      <mesh ref={planet4}><dodecahedronGeometry args={[0.12, 0]} /><meshStandardMaterial color="#94A3B8" emissive="#64748B" emissiveIntensity={0.3} wireframe /></mesh>
+      <mesh ref={planet5}><tetrahedronGeometry args={[0.08, 0]} /><meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.5} wireframe /></mesh>
     </group>
   );
 };
@@ -140,7 +140,7 @@ const ShootingStars = () => {
   });
   return (
     <mesh ref={starRef}>
-      <sphereGeometry args={[0.1, 8, 8]} /><meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
+      <sphereGeometry args={[0.08, 8, 8]} /><meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
       <mesh rotation={[0, 0, Math.PI / 4]} position={[-2, 1.6, 0]}><boxGeometry args={[5, 0.02, 0.02]} /><meshBasicMaterial color="#ffffff" transparent opacity={0.3} /></mesh>
     </mesh>
   );
@@ -160,9 +160,9 @@ const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoadi
 
   return (
     <div className={`absolute inset-0 w-full h-full ${showOnlyCat ? 'z-10' : 'z-0'}`}>
-      <Canvas 
-        key={mode} 
-        camera={{ position: current.cameraPos, fov: 45 }} 
+      <Canvas
+        key={mode}
+        camera={{ position: current.cameraPos, fov: 45 }}
         style={{ width: '100%', height: '100%' }}
       >
         <group position={[current.catX, current.catY, 0]}>
@@ -182,14 +182,7 @@ const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoadi
               <pointLight position={[5, 5, 5]} intensity={0.8} color="#818CF8" />
               <pointLight position={[-5, -5, -5]} intensity={0.6} color="#F472B6" />
 
-              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -4.2, 0]}>
-                <planeGeometry args={[7, 7]} />
-                <shaderMaterial
-                  transparent depthWrite={false} blending={THREE.AdditiveBlending}
-                  vertexShader={`varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`}
-                  fragmentShader={`varying vec2 vUv; void main() { float dist = distance(vUv, vec2(0.5)); float alpha = smoothstep(0.5, 0.0, dist); vec3 color = mix(vec3(0.15, 0.15, 0.3), vec3(0.2, 0.25, 0.4), alpha); gl_FragColor = vec4(color, alpha * 0.55); }`}
-                />
-              </mesh>
+              {/* 은하수 바닥 제거 완료 */}
 
               <Suspense fallback={<LoadingPlaceholder />}>
                 <CatModel advice={advice} showBubble={showBubble} isLoading={isLoading} />
