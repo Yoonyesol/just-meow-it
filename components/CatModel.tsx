@@ -206,8 +206,8 @@ const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoadi
               <pointLight position={[5, 5, 5]} intensity={0.8} color="#818CF8" />
               <pointLight position={[-5, -5, -5]} intensity={0.6} color="#F472B6" />
 
-              {/* 은하수 빛 번짐 (고양이 발밑으로 정확히 이동) */}
-              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.8, 0]}>
+              {/* 은하수 빛 번짐 (고양이의 새로운 위치 -4.2에 완벽 동기화) */}
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -4.2, 0]}>
                 <planeGeometry args={[7, 7]} />
                 <shaderMaterial
                   transparent depthWrite={false} blending={THREE.AdditiveBlending}
@@ -216,7 +216,7 @@ const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoadi
                 />
               </mesh>
 
-              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -3.79, 0]}>
+              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -4.19, 0]}>
                 <planeGeometry args={[3, 3]} />
                 <shaderMaterial
                   transparent depthWrite={false} blending={THREE.AdditiveBlending}
@@ -225,9 +225,9 @@ const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoadi
                 />
               </mesh>
 
-              <Sparkles position={[0, -3.7, 0]} count={30} scale={3} size={1.5} speed={0.6} opacity={0.4} color="#E0E7FF" />
+              <Sparkles position={[0, -4.1, 0]} count={30} scale={3} size={1.5} speed={0.6} opacity={0.4} color="#E0E7FF" />
               <Sparkles count={40} scale={6} size={2} speed={0.4} opacity={0.2} color="#A5B4FC" />
-              <ContactShadows position={[0, -3.8, 0]} opacity={0.4} scale={5} blur={1.5} far={4} color="#000000" />
+              <ContactShadows position={[0, -4.2, 0]} opacity={0.4} scale={5} blur={1.5} far={4} color="#000000" />
 
               <Suspense fallback={<LoadingPlaceholder />}>
                 <CatModel advice={advice} showBubble={showBubble} />
