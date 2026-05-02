@@ -25,34 +25,39 @@ export default function MeowButton() {
 
     const handleMeow = () => {
         setIsLoading(true);
-        setShowBubble(false);
+        setShowBubble(true); // 로딩 중에도 말풍선을 띄워 스켈레톤을 보여줌
         
         setTimeout(() => {
             const randomAdvice = ADVICES[Math.floor(Math.random() * ADVICES.length)];
             setAdvice(randomAdvice);
             setIsLoading(false);
             setHasStarted(true);
-            setShowBubble(true);
+            // showBubble은 계속 true 유지
         }, 1500);
     };
 
     return (
         <div className="w-full h-full flex flex-col relative">
-            {/* 고양이 + 조언 박스 + 버튼 통합 영역 (상향 조정 레이아웃 복구) */}
+            {/* 고양이 + 조언 박스 + 버튼 통합 영역 (상향 조정 레이아웃 고정) */}
             <div className="flex-1 w-full max-w-md px-6 z-10 flex flex-col justify-center items-center pointer-events-auto mx-auto -mt-10">
-                {/* 고양이 영역 (높이를 줄여서 하단 UI를 위로 밀착) */}
+                {/* 고양이 영역 (높이 고정) */}
                 <div className="w-full h-[25vh] min-h-[220px] relative">
-                    <CatScene advice={advice} showBubble={showBubble} showOnlyCat={true} />
+                    <CatScene 
+                        advice={advice} 
+                        showBubble={showBubble} 
+                        showOnlyCat={true} 
+                        isLoading={isLoading} 
+                    />
                 </div>
 
-                {/* 해설 제목 (위치 고정) */}
+                {/* 해설 제목 레이아웃 완전 고정 (h-[20px] 확보) */}
                 <div className="w-full text-left px-1 mb-2 h-[20px] flex items-end">
-                    {hasStarted && !isLoading && (
+                    <div className={`transition-opacity duration-300 ${(hasStarted && !isLoading) ? 'opacity-100' : 'opacity-0'}`}>
                         <Paragraph typography="t7" fontWeight="bold" className="text-[#8B95A1]">해설</Paragraph>
-                    )}
+                    </div>
                 </div>
                 
-                {/* 조언 해설 박스 */}
+                {/* 조언 해설 박스 (높이 및 위치 고정) */}
                 <div className="min-h-[110px] w-full bg-[#161B2C]/90 backdrop-blur-xl rounded-[24px] p-6 flex flex-col items-center justify-center transition-all duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.5)] border border-white/10">
                     {isLoading ? (
                         <AdviceSkeleton />
@@ -69,7 +74,7 @@ export default function MeowButton() {
 
                 <Spacing size={16} />
 
-                {/* 메인 버튼 */}
+                {/* 메인 버튼 (위치 고정) */}
                 <TossButton 
                     title={isLoading ? "냥이가 생각 중..." : (!hasStarted ? "냥이에게 물어보기" : "다시 물어보기")} 
                     onPress={handleMeow}

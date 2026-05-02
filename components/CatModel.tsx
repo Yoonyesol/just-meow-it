@@ -11,6 +11,7 @@ interface CatProps {
   showBubble?: boolean;
   showOnlyBackground?: boolean;
   showOnlyCat?: boolean;
+  isLoading?: boolean;
 }
 
 const CatModel = ({ advice, showBubble }: CatProps) => {
@@ -20,8 +21,7 @@ const CatModel = ({ advice, showBubble }: CatProps) => {
   return (
     <group ref={group}>
       <Float speed={1.5} rotationIntensity={0.25} floatIntensity={0.3} floatingRange={[-0.03, 0.03]}>
-        {/* 고양이를 약 2cm 더 하향 조정 (-3.2 -> -3.8) */}
-        <primitive object={scene} scale={0.1} position={[0, -3.8, 0]} />
+        <primitive object={scene} scale={0.1} position={[0, -4.2, 0]} />
       </Float>
     </group>
   );
@@ -163,16 +163,24 @@ const ShootingStars = () => {
   );
 };
 
-const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat }: CatProps) => {
+const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoading }: CatProps) => {
   return (
     <div className={`absolute inset-0 w-full h-full ${showOnlyCat ? 'z-10' : 'z-0'}`}>
-      {/* 2D 말풍선 (고양이와 함께 약 2cm 하향 조정) */}
-      {!showOnlyBackground && showBubble && advice && (
-        <div className="absolute top-[5%] left-1/2 transform -translate-x-1/2 z-20 w-max max-w-[260px] animate-fadeInOut transition-all duration-300">
-          <div className="bg-[#5D6BBF] rounded-[24px] px-5 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.5)] border border-white/30 flex items-center justify-center relative">
-            <Paragraph typography="t6" fontWeight="bold" className="text-white text-center leading-snug break-keep">
-              {advice.title}
-            </Paragraph>
+      {/* 2D 말풍선 */}
+      {!showOnlyBackground && showBubble && (
+        <div className="absolute top-[5%] left-1/2 transform -translate-x-1/2 z-20 w-max min-w-[140px] max-w-[260px] animate-fadeInOut transition-all duration-300">
+          <div className="bg-[#5D6BBF] rounded-[24px] px-5 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.5)] border border-white/30 flex items-center justify-center relative min-h-[52px]">
+            {isLoading ? (
+              <div className="flex gap-1.5 animate-pulse">
+                <div className="w-2 h-2 bg-white/40 rounded-full"></div>
+                <div className="w-2 h-2 bg-white/40 rounded-full"></div>
+                <div className="w-2 h-2 bg-white/40 rounded-full"></div>
+              </div>
+            ) : advice && (
+              <Paragraph typography="t6" fontWeight="bold" className="text-white text-center leading-snug break-keep">
+                {advice.title}
+              </Paragraph>
+            )}
             <div className="absolute -bottom-[6px] left-1/2 transform -translate-x-1/2 w-3 h-3 bg-[#5D6BBF] rotate-45 rounded-[2px] border-b border-r border-white/30"></div>
           </div>
         </div>
