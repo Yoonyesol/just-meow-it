@@ -23,32 +23,16 @@ export default function MeowButton() {
     const [hasStarted, setHasStarted] = useState(false);
     const [showBubble, setShowBubble] = useState(false);
 
-    // 데이터 유지 (Toss 가이드 준수)
-    useEffect(() => {
-        const saved = localStorage.getItem('last_meow_advice');
-        if (saved) {
-            try {
-                const parsed = JSON.parse(saved);
-                setAdvice(parsed);
-                setHasStarted(true);
-                setShowBubble(true);
-            } catch (e) { console.error(e); }
-        }
-    }, []);
-
     const handleMeow = () => {
         setIsLoading(true);
-        setShowBubble(false);
+        setHasStarted(true);
+        setShowBubble(true); // 말풍선을 즉시 보여주고 유지함
 
         setTimeout(() => {
             const randomAdvice = ADVICES[Math.floor(Math.random() * ADVICES.length)];
             setAdvice(randomAdvice);
             setIsLoading(false);
-            setHasStarted(true);
             setShowBubble(true);
-            
-            // 데이터 저장
-            localStorage.setItem('last_meow_advice', JSON.stringify(randomAdvice));
         }, 1500);
     };
 
@@ -73,7 +57,7 @@ export default function MeowButton() {
 
                 {/* 조언 해설 박스 (프리미엄 반짝이는 글래스모피즘) */}
                 <div 
-                    className="min-h-[110px] w-full bg-white/10 backdrop-blur-[32px] rounded-[28px] p-6 flex flex-col items-center justify-center transition-all duration-500 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-[1.5px] border-white/40 pointer-events-auto relative overflow-hidden group"
+                    className="min-h-[110px] w-full bg-white/25 backdrop-blur-[32px] rounded-[28px] p-6 flex flex-col items-center justify-center transition-all duration-500 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border-[1.5px] border-white/60 pointer-events-auto relative overflow-hidden group"
                     style={{
                         boxShadow: '0 0 15px rgba(255, 255, 255, 0.1), inset 0 0 20px rgba(255, 255, 255, 0.05)',
                         animation: 'border-shimmer 3s infinite alternate ease-in-out'
@@ -85,12 +69,16 @@ export default function MeowButton() {
                     {isLoading ? (
                         <AdviceSkeleton />
                     ) : !hasStarted ? (
-                        <Paragraph typography="t6" fontWeight="medium" style={{ color: '#FFFFFF', textAlign: 'center', position: 'relative', zIndex: 1 }} className='whitespace-pre-line leading-relaxed text-center w-full'>
-                            머릿속을 맴도는 고민이 있냥?{'\n'}마음속으로 질문을 떠올리고 버튼을 누르라옹!
+                        <Paragraph typography="t5" fontWeight="bold" style={{ textAlign: 'center', position: 'relative', zIndex: 1 }} className='whitespace-pre-line leading-relaxed text-center w-full'>
+                            <span style={{ color: '#FFFFFF', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+                                머릿속을 맴도는 고민이 있냥?{"\n"}마음속으로 질문을 떠올리고 버튼을 누르라옹!
+                            </span>
                         </Paragraph>
                     ) : (
-                        <Paragraph typography="t7" fontWeight="medium" style={{ color: '#FFFFFF', textAlign: 'center', position: 'relative', zIndex: 1 }} className='whitespace-pre-line leading-relaxed break-keep text-center w-full'>
-                            {advice.advice}
+                        <Paragraph typography="t5" fontWeight="bold" style={{ textAlign: 'center', position: 'relative', zIndex: 1 }} className='whitespace-pre-line leading-relaxed break-keep text-center w-full'>
+                            <span style={{ color: '#FFFFFF', textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}>
+                                {advice.advice}
+                            </span>
                         </Paragraph>
                     )}
 

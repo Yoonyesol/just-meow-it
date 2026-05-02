@@ -174,8 +174,11 @@ const IndividualTwinklingStars = ({ count = 15000 }) => {
   return (
     <points ref={pointsRef}>
       <bufferGeometry>
+        {/* @ts-ignore */}
         <bufferAttribute attach="attributes-position" count={count} array={positions} itemSize={3} />
+        {/* @ts-ignore */}
         <bufferAttribute attach="attributes-aSize" count={count} array={sizes} itemSize={1} />
+        {/* @ts-ignore */}
         <bufferAttribute attach="attributes-aOpacity" count={count} array={opacities} itemSize={1} />
       </bufferGeometry>
       <shaderMaterial
@@ -205,15 +208,22 @@ const CatModel = ({ advice, showBubble, isLoading }: CatProps) => {
   return (
     <group>
       {showBubble && (
-        <Html position={[0, 1.0, 0]} center distanceFactor={10} className="pointer-events-none">
-          <div className="w-max min-w-[140px] max-w-[220px] animate-fadeInOut transition-all duration-300">
-            <div className="bg-[#8FA1FF] rounded-[20px] px-4 py-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.4)] border border-white/50 flex items-center justify-center relative min-h-[44px]">
+        <Html position={[0, 1.2, 0]} center distanceFactor={10} className="pointer-events-none">
+          <div className="w-max min-w-[160px] max-w-[240px] animate-fadeInOut transition-all duration-300">
+            <div className="bg-white rounded-[22px] px-5 py-3 shadow-[0_10px_40px_rgba(255,255,255,0.3)] flex items-center justify-center relative min-h-[50px]">
               {isLoading ? (
-                <div className="flex gap-1.5 animate-pulse"><div className="w-2 h-2 bg-white/80 rounded-full"></div><div className="w-2 h-2 bg-white/80 rounded-full"></div><div className="w-2 h-2 bg-white/80 rounded-full"></div></div>
+                <div className="flex gap-1.5 py-1 animate-pulse">
+                  <div className="w-2.5 h-2.5 bg-[#8FA1FF] rounded-full"></div>
+                  <div className="w-2.5 h-2.5 bg-[#8FA1FF] rounded-full"></div>
+                  <div className="w-2.5 h-2.5 bg-[#8FA1FF] rounded-full"></div>
+                </div>
               ) : advice && (
-                <Paragraph typography="t7" fontWeight="bold" style={{ color: '#FFFFFF', textAlign: 'center' }} className="leading-tight break-keep">{advice.title}</Paragraph>
+                <Paragraph typography="t5" fontWeight="bold" style={{ textAlign: 'center' }} className="leading-tight break-keep">
+                  <span style={{ color: '#4E5968' }}>{advice.title}</span>
+                </Paragraph>
               )}
-              <div className="absolute -bottom-[5px] left-1/2 transform -translate-x-1/2 w-2.5 h-2.5 bg-[#8FA1FF] rotate-45 rounded-[1px] border-b border-r border-white/50"></div>
+              {/* 말풍선 꼬리: 본체와 자연스럽게 연결되도록 위치 조정 */}
+              <div className="absolute -bottom-[4px] left-1/2 transform -translate-x-1/2 w-3.5 h-3.5 bg-white rotate-45 rounded-sm"></div>
             </div>
           </div>
         </Html>
@@ -279,8 +289,9 @@ const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoadi
           )}
           {!showOnlyBackground && (
             <>
-              <ambientLight intensity={0.8} />
-              <directionalLight position={[5, 5, 5]} intensity={2.5} color="#ffffff" />
+              <ambientLight intensity={1.5} />
+              <directionalLight position={[5, 8, 5]} intensity={6.0} color="#ffffff" />
+              <pointLight position={[0, 2, 4]} intensity={15.0} color="#ffffff" />
               <Suspense fallback={null}><CatModel advice={advice} showBubble={showBubble} isLoading={isLoading} /></Suspense>
             </>
           )}
