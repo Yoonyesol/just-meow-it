@@ -12,14 +12,6 @@ export default function Home() {
         <CatScene showOnlyBackground={true} />
       </div>
 
-      {/* 프리미엄 투명 헤더 (글래스모피즘) */}
-      <div className="flex items-center px-5 h-[56px] border-b border-white/20 backdrop-blur-md sticky top-0 z-50 transition-colors">
-        <div className="flex items-baseline gap-2 leading-none">
-          <Paragraph typography="t4" fontWeight="bold" style={{ color: '#FFFFFF' }} className="leading-none">별 헤는 냥</Paragraph>
-          <span className="text-[13px] font-medium tracking-tight leading-none" style={{ color: '#FFFFFF' }}>묘(猫)한 고민해결책</span>
-        </div>
-      </div>
-
       {/* 메인 뷰 영역 */}
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto pointer-events-none z-10 relative">
         <MeowButton />
