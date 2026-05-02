@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Paragraph, Spacing } from '@toss/tds-mobile';
 import CatScene from './CatModel';
 import { TossButton } from './TossButton';
@@ -23,15 +23,32 @@ export default function MeowButton() {
     const [hasStarted, setHasStarted] = useState(false);
     const [showBubble, setShowBubble] = useState(false);
 
+    // 데이터 유지 (Toss 가이드 준수)
+    useEffect(() => {
+        const saved = localStorage.getItem('last_meow_advice');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                setAdvice(parsed);
+                setHasStarted(true);
+                setShowBubble(true);
+            } catch (e) { console.error(e); }
+        }
+    }, []);
+
     const handleMeow = () => {
         setIsLoading(true);
-        setShowBubble(true);
+        setShowBubble(false);
 
         setTimeout(() => {
             const randomAdvice = ADVICES[Math.floor(Math.random() * ADVICES.length)];
             setAdvice(randomAdvice);
             setIsLoading(false);
             setHasStarted(true);
+            setShowBubble(true);
+            
+            // 데이터 저장
+            localStorage.setItem('last_meow_advice', JSON.stringify(randomAdvice));
         }, 1500);
     };
 
@@ -59,11 +76,11 @@ export default function MeowButton() {
                     {isLoading ? (
                         <AdviceSkeleton />
                     ) : !hasStarted ? (
-                        <Paragraph typography="t6" fontWeight="medium" className='text-[#CBD5E1] whitespace-pre-line leading-relaxed text-center w-full' style={{ textAlign: 'center' }}>
+                        <Paragraph typography="t6" fontWeight="medium" className='text-[#F9FAFB] whitespace-pre-line leading-relaxed text-center w-full' style={{ textAlign: 'center' }}>
                             머릿속을 맴도는 고민이 있냥?{'\n'}마음속으로 질문을 떠올리고 버튼을 누르라옹!
                         </Paragraph>
                     ) : (
-                        <Paragraph typography="t7" fontWeight="medium" className='text-[#E5E8EB] whitespace-pre-line leading-relaxed break-keep text-center w-full' style={{ textAlign: 'center' }}>
+                        <Paragraph typography="t7" fontWeight="medium" className='text-[#F9FAFB] whitespace-pre-line leading-relaxed break-keep text-center w-full' style={{ textAlign: 'center' }}>
                             {advice.advice}
                         </Paragraph>
                     )}
