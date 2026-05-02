@@ -16,7 +16,7 @@ export default function Home() {
       <div className="flex items-center px-5 h-[56px] border-b border-white/5 backdrop-blur-md sticky top-0 z-50 transition-colors">
         <div className="flex items-baseline gap-2 leading-none">
           <Paragraph typography="t4" fontWeight="bold" className="text-white leading-none">별 헤는 냥</Paragraph>
-          <span className="text-[13px] font-medium text-white/50 tracking-tight leading-none">묘(猫)한 고민해결책</span>
+          <span className="text-[13px] font-medium text-white/80 tracking-tight leading-none">묘(猫)한 고민해결책</span>
         </div>
       </div>
 

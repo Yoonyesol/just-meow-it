@@ -1,8 +1,8 @@
 'use client';
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useGLTF, Float, Sparkles, ContactShadows, OrbitControls, Stars } from '@react-three/drei';
-import { Suspense, useRef } from 'react';
+import { useGLTF, Float, Sparkles, ContactShadows, OrbitControls, Stars, Html } from '@react-three/drei';
+import { Suspense, useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 import { Paragraph } from '@toss/tds-mobile';
 
@@ -14,12 +14,52 @@ interface CatProps {
   isLoading?: boolean;
 }
 
-const CatModel = ({ advice, showBubble }: CatProps) => {
+// 모드별 설정 분리
+const CONFIG = {
+  portrait: {
+    catX: 0,
+    catY: 4.0,
+    cameraPos: [0, 1.5, 7] as [number, number, number],
+    target: [0, 1.5, 0] as [number, number, number],
+    polarRange: [Math.PI / 2.5, Math.PI / 2.5] as [number, number],
+  },
+  landscape: {
+    catX: -5.5,
+    catY: 5.2,
+    cameraPos: [-5.5, 5.2, 7] as [number, number, number],
+    target: [-5.5, 5.2, 0] as [number, number, number],
+    polarRange: [Math.PI / 2.1, Math.PI / 1.9] as [number, number],
+  }
+};
+
+const CatModel = ({ advice, showBubble, isLoading }: CatProps) => {
   const group = useRef<THREE.Group>(null);
   const { scene } = useGLTF('/cat_model/scene.gltf');
 
   return (
     <group ref={group}>
+      {/* 3D 말풍선 복구 및 색상 강화 */}
+      {showBubble && (
+        <Html position={[0, 1.2, 0]} center distanceFactor={10} className="pointer-events-none">
+          <div className="w-max min-w-[140px] max-w-[220px] animate-fadeInOut transition-all duration-300">
+            <div className="bg-[#4F5BB0] rounded-[20px] px-4 py-2.5 shadow-[0_8px_30px_rgba(0,0,0,0.6)] border border-white/40 flex items-center justify-center relative min-h-[44px]">
+              {isLoading ? (
+                <div className="flex gap-1.5 animate-pulse">
+                  <div className="w-2 h-2 bg-white/60 rounded-full"></div>
+                  <div className="w-2 h-2 bg-white/60 rounded-full"></div>
+                  <div className="w-2 h-2 bg-white/60 rounded-full"></div>
+                </div>
+              ) : advice && (
+                <Paragraph typography="t7" fontWeight="bold" className="text-white text-center leading-tight break-keep" style={{ color: '#FFFFFF' }}>
+                  {advice.title}
+                </Paragraph>
+              )}
+              <div className="absolute -bottom-[5px] left-1/2 transform -translate-x-1/2 w-2.5 h-2.5 bg-[#4F5BB0] rotate-45 rounded-[1px] border-b border-r border-white/40"></div>
+            </div>
+          </div>
+        </Html>
+      )}
+
       <Float speed={1.5} rotationIntensity={0.25} floatIntensity={0.3} floatingRange={[-0.03, 0.03]}>
         <primitive object={scene} scale={0.06} position={[0, -4.2, 0]} />
       </Float>
@@ -27,13 +67,10 @@ const CatModel = ({ advice, showBubble }: CatProps) => {
   );
 };
 
-// 고양이가 로딩되는 동안 보여줄 신비로운 빛의 구체
 const LoadingPlaceholder = () => {
   const ref = useRef<THREE.Mesh>(null);
   useFrame(({ clock }) => {
-    if (ref.current) {
-      ref.current.scale.setScalar(1 + Math.sin(clock.getElapsedTime() * 4) * 0.1);
-    }
+    if (ref.current) ref.current.scale.setScalar(1 + Math.sin(clock.getElapsedTime() * 4) * 0.1);
   });
   return (
     <mesh ref={ref} position={[0, -0.5, 0]}>
@@ -43,10 +80,8 @@ const LoadingPlaceholder = () => {
   );
 };
 
-// 모델 미리 불러오기 (최적화)
 useGLTF.preload('/cat_model/scene.gltf');
 
-// 우주 테마: 각기 다른 속도로 공전하는 행성들
 const OrbitingMoons = () => {
   const planet1 = useRef<THREE.Mesh>(null);
   const planet2 = useRef<THREE.Mesh>(null);
@@ -56,61 +91,24 @@ const OrbitingMoons = () => {
 
   useFrame(({ clock }) => {
     const t = clock.getElapsedTime();
-    if (planet1.current) {
-      planet1.current.position.x = Math.cos(t * 0.15) * 2.8;
-      planet1.current.position.z = Math.sin(t * 0.15) * 2.8;
-    }
-    if (planet2.current) {
-      planet2.current.position.x = Math.cos(t * 0.1) * 3.2;
-      planet2.current.position.z = Math.sin(t * 0.1) * 3.2;
-      planet2.current.position.y = Math.sin(t * 0.05) * 1.5;
-    }
-    if (planet3.current) {
-      planet3.current.position.x = Math.cos(t * 0.2) * 2.4;
-      planet3.current.position.z = Math.sin(t * 0.2) * 2.4;
-    }
-    if (planet4.current) {
-      planet4.current.position.x = Math.cos(t * 0.12) * 3.5;
-      planet4.current.position.z = Math.sin(t * 0.12) * 3.5;
-    }
-    if (planet5.current) {
-      planet5.current.position.x = Math.cos(t * 0.08) * 4.0;
-      planet5.current.position.z = Math.sin(t * 0.08) * 4.0;
-    }
+    if (planet1.current) { planet1.current.position.x = Math.cos(t * 0.15) * 2.8; planet1.current.position.z = Math.sin(t * 0.15) * 2.8; }
+    if (planet2.current) { planet2.current.position.x = Math.cos(t * 0.1) * 3.2; planet2.current.position.z = Math.sin(t * 0.1) * 3.2; planet2.current.position.y = Math.sin(t * 0.05) * 1.5; }
+    if (planet3.current) { planet3.current.position.x = Math.cos(t * 0.2) * 2.4; planet3.current.position.z = Math.sin(t * 0.2) * 2.4; }
+    if (planet4.current) { planet4.current.position.x = Math.cos(t * 0.12) * 3.5; planet4.current.position.z = Math.sin(t * 0.12) * 3.5; }
+    if (planet5.current) { planet5.current.position.x = Math.cos(t * 0.08) * 4.0; planet5.current.position.z = Math.sin(t * 0.08) * 4.0; }
   });
 
   return (
     <group position={[0, -0.8, 0]}>
-      {/* 궤도 행성 1: 인디고 구체 */}
-      <mesh ref={planet1}>
-        <sphereGeometry args={[0.25, 16, 16]} />
-        <meshStandardMaterial color="#818CF8" emissive="#818CF8" emissiveIntensity={0.8} wireframe />
-      </mesh>
-      {/* 궤도 행성 2: 핑크 정이십면체 */}
-      <mesh ref={planet2}>
-        <icosahedronGeometry args={[0.22, 0]} />
-        <meshStandardMaterial color="#FBCFE8" emissive="#FBCFE8" emissiveIntensity={0.6} wireframe />
-      </mesh>
-      {/* 궤도 행성 3: 에메랄드 정팔면체 */}
-      <mesh ref={planet3}>
-        <octahedronGeometry args={[0.15, 0]} />
-        <meshStandardMaterial color="#34D399" emissive="#34D399" emissiveIntensity={1} wireframe />
-      </mesh>
-      {/* 궤도 행성 4: 스틸 블루 정십이면체 */}
-      <mesh ref={planet4}>
-        <dodecahedronGeometry args={[0.18, 0]} />
-        <meshStandardMaterial color="#94A3B8" emissive="#64748B" emissiveIntensity={0.3} wireframe />
-      </mesh>
-      {/* 궤도 행성 5: 화이트 정사면체 */}
-      <mesh ref={planet5}>
-        <tetrahedronGeometry args={[0.12, 0]} />
-        <meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.5} wireframe />
-      </mesh>
+      <mesh ref={planet1}><sphereGeometry args={[0.25, 16, 16]} /><meshStandardMaterial color="#818CF8" emissive="#818CF8" emissiveIntensity={0.8} wireframe /></mesh>
+      <mesh ref={planet2}><icosahedronGeometry args={[0.22, 0]} /><meshStandardMaterial color="#FBCFE8" emissive="#FBCFE8" emissiveIntensity={0.6} wireframe /></mesh>
+      <mesh ref={planet3}><octahedronGeometry args={[0.15, 0]} /><meshStandardMaterial color="#34D399" emissive="#34D399" emissiveIntensity={1} wireframe /></mesh>
+      <mesh ref={planet4}><dodecahedronGeometry args={[0.18, 0]} /><meshStandardMaterial color="#94A3B8" emissive="#64748B" emissiveIntensity={0.3} wireframe /></mesh>
+      <mesh ref={planet5}><tetrahedronGeometry args={[0.12, 0]} /><meshStandardMaterial color="#FFFFFF" emissive="#FFFFFF" emissiveIntensity={0.5} wireframe /></mesh>
     </group>
   );
 };
 
-// 실감나는 우주 배경: 회전하는 다중 별자리 레이어
 const RotatingStars = () => {
   const starsRef = useRef<THREE.Group>(null);
   useFrame(({ clock }) => {
@@ -119,7 +117,6 @@ const RotatingStars = () => {
       starsRef.current.rotation.x = clock.getElapsedTime() * 0.005;
     }
   });
-
   return (
     <group ref={starsRef}>
       <Stars radius={80} depth={50} count={5000} factor={4} saturation={0} fade speed={1} />
@@ -128,67 +125,47 @@ const RotatingStars = () => {
   );
 };
 
-// 가끔씩 지나가는 유성 효과
 const ShootingStars = () => {
   const starRef = useRef<THREE.Mesh>(null);
   const active = useRef(false);
-  const speed = 0.3; // 속도를 더 느리고 우아하게 조정
-
   useFrame(() => {
     if (!active.current && Math.random() < 0.005) {
       active.current = true;
-      if (starRef.current) {
-        starRef.current.position.set(Math.random() * 40 - 20, 20, -30);
-      }
+      if (starRef.current) starRef.current.position.set(Math.random() * 40 - 20, 20, -30);
     }
-
     if (active.current && starRef.current) {
-      starRef.current.position.x += speed;
-      starRef.current.position.y -= speed * 0.8;
-      if (starRef.current.position.y < -20) {
-        active.current = false;
-      }
+      starRef.current.position.x += 0.3; starRef.current.position.y -= 0.24;
+      if (starRef.current.position.y < -20) active.current = false;
     }
   });
-
   return (
     <mesh ref={starRef}>
-      <sphereGeometry args={[0.1, 8, 8]} />
-      <meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
-      <mesh rotation={[0, 0, Math.PI / 4]} position={[-2, 1.6, 0]}>
-        <boxGeometry args={[5, 0.02, 0.02]} />
-        <meshBasicMaterial color="#ffffff" transparent opacity={0.3} />
-      </mesh>
+      <sphereGeometry args={[0.1, 8, 8]} /><meshBasicMaterial color="#ffffff" transparent opacity={0.9} />
+      <mesh rotation={[0, 0, Math.PI / 4]} position={[-2, 1.6, 0]}><boxGeometry args={[5, 0.02, 0.02]} /><meshBasicMaterial color="#ffffff" transparent opacity={0.3} /></mesh>
     </mesh>
   );
 };
 
 const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoading }: CatProps) => {
+  const [mode, setMode] = useState<'portrait' | 'landscape'>('portrait');
+
+  useEffect(() => {
+    const handleResize = () => setMode(window.innerWidth > window.innerHeight ? 'landscape' : 'portrait');
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const current = CONFIG[mode];
+
   return (
     <div className={`absolute inset-0 w-full h-full ${showOnlyCat ? 'z-10' : 'z-0'}`}>
-      {/* 2D 말풍선 */}
-      {!showOnlyBackground && showBubble && (
-        <div className="absolute top-[11%] left-1/2 transform -translate-x-1/2 z-20 w-max min-w-[140px] max-w-[260px] animate-fadeInOut transition-all duration-300">
-          <div className="bg-[#5D6BBF] rounded-[24px] px-5 py-3 shadow-[0_12px_40px_rgba(0,0,0,0.5)] border border-white/30 flex items-center justify-center relative min-h-[52px]">
-            {isLoading ? (
-              <div className="flex gap-1.5 animate-pulse">
-                <div className="w-2 h-2 bg-white/40 rounded-full"></div>
-                <div className="w-2 h-2 bg-white/40 rounded-full"></div>
-                <div className="w-2 h-2 bg-white/40 rounded-full"></div>
-              </div>
-            ) : advice && (
-              <Paragraph typography="t6" fontWeight="bold" className="text-white text-center leading-snug break-keep">
-                {advice.title}
-              </Paragraph>
-            )}
-            <div className="absolute -bottom-[6px] left-1/2 transform -translate-x-1/2 w-3 h-3 bg-[#5D6BBF] rotate-45 rounded-[2px] border-b border-r border-white/30"></div>
-          </div>
-        </div>
-      )}
-
-      <Canvas camera={{ position: [0, 1.5, 6] }} style={{ width: '100%', height: '100%' }}>
-        <group position={[0, 4.0, 0]}>
-          {/* 배경 요소들 */}
+      <Canvas 
+        key={mode} 
+        camera={{ position: current.cameraPos, fov: 45 }} 
+        style={{ width: '100%', height: '100%' }}
+      >
+        <group position={[current.catX, current.catY, 0]}>
           {!showOnlyCat && (
             <>
               <ambientLight intensity={0.6} />
@@ -198,7 +175,6 @@ const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoadi
             </>
           )}
 
-          {/* 고양이 및 오라 (배경 모드일 때는 숨김) */}
           {!showOnlyBackground && (
             <>
               <ambientLight intensity={0.9} />
@@ -206,7 +182,6 @@ const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoadi
               <pointLight position={[5, 5, 5]} intensity={0.8} color="#818CF8" />
               <pointLight position={[-5, -5, -5]} intensity={0.6} color="#F472B6" />
 
-              {/* 은하수 빛 번짐 (고양이의 새로운 위치 -4.2에 완벽 동기화) */}
               <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -4.2, 0]}>
                 <planeGeometry args={[7, 7]} />
                 <shaderMaterial
@@ -216,29 +191,17 @@ const CatScene = ({ advice, showBubble, showOnlyBackground, showOnlyCat, isLoadi
                 />
               </mesh>
 
-              <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -4.19, 0]}>
-                <planeGeometry args={[3, 3]} />
-                <shaderMaterial
-                  transparent depthWrite={false} blending={THREE.AdditiveBlending}
-                  vertexShader={`varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`}
-                  fragmentShader={`varying vec2 vUv; void main() { float dist = distance(vUv, vec2(0.5)); float alpha = smoothstep(0.5, 0.0, dist); gl_FragColor = vec4(vec3(0.4, 0.5, 0.6), alpha * 0.7); }`}
-                />
-              </mesh>
-
-              <Sparkles position={[0, -4.1, 0]} count={30} scale={3} size={1.5} speed={0.6} opacity={0.4} color="#E0E7FF" />
-              <Sparkles count={40} scale={6} size={2} speed={0.4} opacity={0.2} color="#A5B4FC" />
-              <ContactShadows position={[0, -4.2, 0]} opacity={0.4} scale={5} blur={1.5} far={4} color="#000000" />
-
               <Suspense fallback={<LoadingPlaceholder />}>
-                <CatModel advice={advice} showBubble={showBubble} />
+                <CatModel advice={advice} showBubble={showBubble} isLoading={isLoading} />
               </Suspense>
             </>
           )}
         </group>
 
         <OrbitControls
+          target={current.target}
           enableZoom={false} enablePan={false} enableDamping={true} dampingFactor={0.05}
-          minPolarAngle={Math.PI / 2.5} maxPolarAngle={Math.PI / 2.5}
+          minPolarAngle={current.polarRange[0]} maxPolarAngle={current.polarRange[1]}
           minAzimuthAngle={-Math.PI / 3} maxAzimuthAngle={Math.PI / 3}
         />
       </Canvas>
